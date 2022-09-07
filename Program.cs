@@ -14,11 +14,8 @@
     {
         public static void Main(string[] args)
         {
-            Kaart k = new Kaart(30, 30);
-            Pad p = new Pad();
-            p.van = new Coordinaat(2, 5);
-            p.naar = new Coordinaat(12, 30);
-            k.Teken(new ConsoleTekener());
+            
+            
         }
     }
    
@@ -50,21 +47,16 @@
         }
     }
 
-    class ConsoleTekener : ITekener
+    public class ConsoleTekener : ITekener
     {
     
-        public static void SchrijfOp(Coordinaat Positie, string Text)
-        {
+        public void SchrijfOp(Coordinaat Positie, string Text) {
             if (Positie.x < 0 || Positie.y < 0)
-            {
-
-                Console.SetBufferSize(1920, 1080);
-                Console.SetCursorPosition(Positie.x, Positie.y);
-                Console.WriteLine(Text);
-                throw new Exception("Kan niet tekenen in het negatieve!");
-
-            }
-
+            throw new Exception("Kan niet tekenen in het negatieve!");
+            Console.SetBufferSize(1920, 1080);
+            Console.SetCursorPosition(Positie.x, Positie.y);
+            Console.WriteLine(Text);
+            Console.SetCursorPosition(0, 0);
         }
         public void Teken(ITekenbaar t)
         {
@@ -95,30 +87,33 @@
     
     class Pad : ITekenbaar
     {
-        private float? LengteBerkend;
+        private float? lengteBerkend;
 
-        public Coordinaat van;
-        public Coordinaat naar;
+        public Coordinaat van { get; set; }
+        public Coordinaat naar { get; set; }
 
         
 
         public float Lengte()
         {
-            Coordinaat c = van + naar;
-            return 1.1F;
+            if (!lengteBerkend.HasValue)
+            lengteBerkend = (float)Math.Sqrt((van.x - naar.x) * (van.x - naar.x) + (van.y - naar.y) * (van.y - naar.y));
+            return lengteBerkend.Value;
         }
         public float Afstand(Coordinaat c)
         {
+            c = van + naar;
             return 1.2F;
         }
 
         public void TekenConsole(ConsoleTekener t)
         {
-            Coordinaat verschil = naar - van;
-            for (int i = 0; i < 100; i++)
+            for (int i = 0; i < (int)Lengte(); i++)
             {
-                ConsoleTekener.SchrijfOp(van + new Coordinaat((int)(verschil.x * ((float)i / 100)), (int)(verschil.y * ((float)i / 100))), "#");
+            float factor = i / Lengte();
+            t.SchrijfOp(new Coordinaat((int)Math.Round(van.x + (naar.x - van.x) * factor), (int)Math.Round(van.y + (naar.y - van.y) * factor)), "#");
             }
+            t.SchrijfOp(new Coordinaat((int)Math.Round(van.x + (naar.x - van.x) * .5), (int)Math.Round(van.y + (naar.y - van.y) * .5)), (1000 * Lengte()).MetSuffixen());
         }
     }
     
@@ -168,6 +163,7 @@
 
 }
 
+/*
 namespace Authenticatie{
     
     class Gebruiker
@@ -267,3 +263,4 @@ namespace Authenticatie{
             //implement later
     }
 }
+*/

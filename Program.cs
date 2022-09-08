@@ -1,11 +1,11 @@
 ﻿namespace Kaart
 {
-    interface ITekener
+    public interface ITekener
     {
         public void Teken(ITekenbaar t);
     }
 
-    interface ITekenbaar{
+    public interface ITekenbaar{
         public void TekenConsole(ConsoleTekener t);
     }
 
@@ -14,8 +14,12 @@
     {
         public static void Main(string[] args)
         {
-            
-            
+            Kaart k = new Kaart(30, 30);
+            Pad p1 = new Pad();
+            p1.van = new Coordinaat(2, 5);
+            p1.naar = new Coordinaat(12, 30);
+            new ConsoleTekener().SchrijfOp(new Coordinaat(0, k.Hoogte + 1), "Deze kaart is schaal 1:1000");
+            System.Console.Read();
         }
     }
    
@@ -118,7 +122,7 @@
     }
     
 
-    struct Coordinaat
+    public struct Coordinaat
     {
         public readonly int x;
         public readonly int y;

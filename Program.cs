@@ -2,7 +2,7 @@
 {
     public interface ITekener
     {
-        public void Teken(ITekenbaar t);
+        public void Teken(ConsoleTekener t);
     }
 
     public interface ITekenbaar{
@@ -18,23 +18,26 @@
             Pad p1 = new Pad();
             p1.van = new Coordinaat(2, 5);
             p1.naar = new Coordinaat(12, 30);
-            //k.VoegPadToe(p1);
+            k.VoegPadToe(p1);
             Pad p2 = new Pad();
             p2.van = new Coordinaat(26, 4);
             p2.naar = new Coordinaat(10, 5);
-            //k.VoegPadToe(p2);
+            k.VoegPadToe(p2);
             //k.VoegItemToe(new Attractie(k, new Coordinaat(15, 15)));
             //k.VoegItemToe(new Attractie(k, new Coordinaat(20, 15)));
             //k.VoegItemToe(new Attractie(k, new Coordinaat(5, 18)));
-            //k.Teken(new ConsoleTekener());
+            k.Teken(new ConsoleTekener());
             new ConsoleTekener().SchrijfOp(new Coordinaat(0, k.Hoogte + 1), "Deze kaart is schaal 1:1000");
             System.Console.Read();
+
         }
     }
    
 
     class Kaart : ITekener
-    {
+    {   
+        public List<KaartItem> Items = new List<KaartItem>();
+        public List<Pad> Paden = new List<Pad>();
         public int Breedte;
         public int Hoogte;
 
@@ -44,13 +47,22 @@
             Hoogte = hoogte;
         }
 
-        public void Teken(ITekenbaar t)
+        public void VoegItemToe(KaartItem i)
         {
-            
+            Items.Add(i);
         }
 
-        public void VoegItemToe()
+        public void VoegPadToe(Pad p)
         {
+            Paden.Add(p);
+        }
+
+        public void Teken(ConsoleTekener t)
+        {
+            foreach (Pad p in Paden)
+            {
+                p.TekenConsole(new ConsoleTekener());
+            }
 
         }
     }
@@ -66,7 +78,7 @@
             Console.WriteLine(Text);
             Console.SetCursorPosition(0, 0);
         }
-        public void Teken(ITekenbaar t)
+        public void Teken(ConsoleTekener t)
         {
             throw new NotImplementedException();
         }
@@ -124,7 +136,15 @@
             t.SchrijfOp(new Coordinaat((int)Math.Round(van.x + (naar.x - van.x) * .5), (int)Math.Round(van.y + (naar.y - van.y) * .5)), (1000 * Lengte()).MetSuffixen());
         }
     }
-    
+
+    /*class Attractie
+    {
+        string naam;
+
+        public Attractie(Kaart k, Coordinaat coordinaat)
+        {
+        }
+    } */
 
     public struct Coordinaat
     {
@@ -178,8 +198,6 @@ namespace Authenticatie{
     {
         public string Wachtwoord  // property
         { get; set; }
-        public string Name  // property
-        { get; set; }
         public string Email  // property
         { get; set; }
 
@@ -191,17 +209,21 @@ namespace Authenticatie{
 
     class GebruikerContext
     {
+        List<Gebruiker> gebruikers = new List<Gebruiker>;
         public int AantalGebruikers()
         {
             return 1; //tijdelijke value
         }
         public Gebruiker GetGebruiker(int i)
         {   
-            
+            gebruikers[i];
         }
-        public void NieuweGebruiker(string Wachtwoord, string naam, string email)
+        public void NieuweGebruiker(string Wachtwoord, string email)
         {
-            
+            Gebruiker myObj = new Gebruiker();
+            myObj.Wachtwoord = Wachtwoord;
+            myObj.Email = email;
+            gebruikers.Add(myObj);
         }
     }
 
